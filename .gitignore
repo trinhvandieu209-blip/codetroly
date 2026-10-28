@@ -1,0 +1,18 @@
+# Bí mật và dữ liệu cục bộ, không bao giờ đưa lên GitHub
+_workspace/
+app/.venv/
+app/data/*.db
+app/data/uploads/
+app/uploads/
+**/__pycache__/
+**/.pytest_cache/
+*.pyc
+.env
+*.log
+
+# Hồ sơ dự thi, mẫu BTC, sách giáo khoa quét (bản quyền), công cụ nội bộ
+ho-so/
+mau/
+tailieu/
+.claude/
+CLAUDE.md

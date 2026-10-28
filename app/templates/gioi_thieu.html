@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Giới thiệu Trợ lý Tin học AI{% endblock %}
+{% block content %}
+<div class="card hero gt-hero">
+  <div>
+    <p class="gt-nhan">Mô tả chức năng sản phẩm</p>
+    <h1>Trợ lý Tin học AI</h1>
+    <p class="sub">Tạo đề từ sách giáo khoa, chấm tự động, gợi ý từng bước và kế hoạch ôn tập riêng cho học sinh Tin học lớp 3, 4, 5.</p>
+    <p><b>Tác giả:</b> thầy Trịnh Văn Điệu · Trường Liên cấp TH-THCS Nguyễn Quốc Phú, TP. Hồ Chí Minh<br><b>Sách:</b> Tin học 3, 4, 5 – Kết nối tri thức với cuộc sống</p>
+    <p class="gt-nut"><a class="btn vang" href="/">Dùng thử ngay →</a> <a class="btn xam" href="/huong-dan">Hướng dẫn dùng AI an toàn</a></p>
+  </div>
+  <img class="gt-anh-hero" src="/static/anh/mobile-trang-chu.jpg" alt="Trang chủ trên điện thoại">
+</div>
+
+<div class="card">
+  <h2>1. Vấn đề cần giải quyết</h2>
+  <div class="buoc gt-4">
+    <div><div class="icon">⏱️</div><b>Soạn đề mất 30–60 phút</b>Mỗi đề bám sách phải tự soạn, giáo viên Tin học dạy nhiều lớp.</div>
+    <div><div class="icon">📝</div><b>Chấm tay bài trắc nghiệm trên giấy</b>Bình quân 40 phút một lớp. Học sinh phải chờ tiết sau mới biết mình sai ở đâu.</div>
+    <div><div class="icon">🏠</div><b>Ở nhà không ai gợi ý</b>Em làm sai không có người dẫn dắt, dễ chép đáp án.</div>
+    <div><div class="icon">👥</div><b>Cả lớp ôn chung một nội dung</b>Không có kế hoạch riêng cho phần từng em còn yếu.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. Mười chức năng chính</h2>
+  <div class="gt-cn">
+    <div class="gt-mot">
+      <img src="/static/anh/gv-tao-de.jpg" alt="Giáo viên chọn bài trong sách để AI soạn đề">
+      <div><span class="so">1</span><b>Soạn đề từ đúng trang sách giáo khoa</b>Giáo viên chọn bài hoặc học kỳ, AI đọc đúng trang sách và soạn đề trắc nghiệm, câu ngắn, câu nối trong khoảng 20 giây. Có thể tải thêm tài liệu riêng để dùng cho môn khác.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/gv-duyet-de.jpg" alt="Giáo viên duyệt và sửa từng câu hỏi">
+      <div><span class="so">2</span><b>Giáo viên duyệt, sửa rồi mới phát hành</b>Từng câu được xem lại, sửa chữ, thêm bớt lựa chọn, gắn hình minh họa. Chỉ khi phát hành mới sinh mã bài 6 ký tự cho học sinh.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/hs-lam-bai.jpg" alt="Học sinh làm bài">
+      <div><span class="so">3</span><b>Học sinh vào bằng mã bài, không cần tài khoản</b>Nhập mã bài và tên gọi là làm được trên điện thoại hay máy tính. Không thu thập thông tin cá nhân.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/hs-ket-qua.jpg" alt="Kết quả có gợi ý từng bước và kế hoạch ôn tập">
+      <div><span class="so">4</span><b>Chấm tự động, nhận xét ngay khi nộp</b>Trắc nghiệm chấm tức thì; câu ngắn chấm bằng AI, chấp nhận sai chính tả nhẹ. <span class="so">5</span><b>Gợi ý từng bước khi sai</b>Tối đa 3 mức gợi ý, AI dẫn dắt chứ không nói đáp án. <span class="so">6</span><b>Kế hoạch ôn tập 3 ngày riêng</b>Lập theo đúng mục mà từng em làm sai.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/hs-game.jpg" alt="Chế độ ôn tập qua game">
+      <div><span class="so">7</span><b>Ôn tập qua game</b>Từng câu 20 giây, điểm thưởng tốc độ và chuỗi đúng, bảng xếp hạng lớp. Hết giờ không chọn thì hiện đáp án và lời giải.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/hs-noi-ghep.jpg" alt="Câu nối ghép chạm chọn cặp">
+      <div><span class="so">8</span><b>Câu nối ghép và câu có hình</b>Chạm chọn cặp trên màn hình cảm ứng; câu hỏi có hình minh họa lấy từ sách.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/gv-bao-cao.jpg" alt="Báo cáo lớp của giáo viên">
+      <div><span class="so">9</span><b>Báo cáo lớp và tải bảng điểm</b>Điểm trung bình, tỉ lệ sai theo câu, mục cần ôn lại, cảm nhận của học sinh, tải CSV.</div>
+    </div>
+    <div class="gt-mot">
+      <img src="/static/anh/hs-huong-dan.jpg" alt="Trang hướng dẫn dùng AI an toàn">
+      <div><span class="so">10</span><b>Hướng dẫn học sinh dùng AI có trách nhiệm</b>Trang riêng với 6 bước làm bài và 6 quy tắc: tự nghĩ trước, AI có thể sai, không nhập thông tin cá nhân, trung thực, báo người lớn khi thấy lạ, dùng máy có giờ giấc.</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>3. Quy trình sử dụng trong một tiết</h2>
+  <ol class="hd-buoc">
+    <li><b>Giáo viên</b> đăng nhập, chọn bài trong sách, bấm tạo đề. Chờ khoảng 20 giây.</li>
+    <li><b>Giáo viên</b> duyệt từng câu, sửa nếu cần, bấm phát hành để nhận mã bài.</li>
+    <li><b>Học sinh</b> nhập mã bài và tên gọi, làm bài trong 10 phút hoặc chơi game ôn tập.</li>
+    <li><b>Học sinh</b> xem điểm ngay, xin gợi ý câu sai, nhận kế hoạch ôn 3 ngày.</li>
+    <li><b>Giáo viên</b> mở báo cáo lớp, biết câu nào cả lớp sai nhiều để giảng lại.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h2>4. AI có trách nhiệm và an toàn cho trẻ</h2>
+  <div class="buoc gt-4">
+    <div><div class="icon">📘</div><b>Bám sách</b>AI chỉ dựa trên sách và tài liệu giáo viên đưa vào, mọi lời nhắc có rào chắn nội dung cho trẻ 8–10 tuổi.</div>
+    <div><div class="icon">✅</div><b>Giáo viên duyệt</b>Không câu hỏi nào đến học sinh khi chưa được giáo viên xem và phát hành.</div>
+    <div><div class="icon">🔒</div><b>Không lộ đáp án</b>Gợi ý dẫn dắt, giới hạn 3 lần. Không thu dữ liệu cá nhân, chỉ tên gọi tự nhập.</div>
+    <div><div class="icon">🛡️</div><b>Dạy dùng AI đúng cách</b>Học sinh đọc 6 quy tắc trước khi làm bài và được nhắc lại sau mỗi bài.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>5. Kết quả thử nghiệm</h2>
+  <p class="sub">Buổi đầu ngày 27/10/2026 tại phòng máy, lớp 4.2 làm đồng loạt; lớp 4.3 và 4.4 làm thử theo nhóm. Đến nay triển khai trên 15 lớp đang dạy: khối 3, khối 4 và khối 5 mỗi khối 5 lớp. Khảo sát giáo viên toàn trường bằng <a href="https://docs.google.com/forms/d/e/1FAIpQLSdqRO42bkP30GeB4wX3lvWkEA9u7GzBgOgPoTGUGXpS9OpvWw/viewform" target="_blank" rel="noopener">Google Form</a> từ 28/10/2026, đang mở.</p>
+  <div class="gt-so">
+    <div><b>15 lớp</b>đang triển khai, mỗi khối 3, 4, 5 có 5 lớp</div>
+    <div><b>32 em</b>lớp 4.2 làm bài trong 10 phút</div>
+    <div><b>85%</b>điểm trung bình lớp 4.2</div>
+    <div><b>27</b>lượt xin gợi ý AI ngày đầu</div>
+    <div><b>40 → 0 phút</b>thời gian chấm một lớp</div>
+    <div><b>74%</b>học sinh để lại cảm nhận chọn "Thích"</div>
+    <div><b>14/31</b>giáo viên của trường đã phản hồi khảo sát (đến 28/10)</div>
+    <div><b>100%</b>8 phiếu đầu hoàn toàn đồng ý ứng dụng giúp đổi mới dạy học</div>
+  </div>
+  <div class="gt-anh-lop">
+    <figure><img src="/static/anh/lop-3.jpg" alt="Lớp 4 làm bài trên Trợ lý AI tại phòng máy"><figcaption>Lớp 4 làm bài tại phòng máy của trường, 28/10/2026</figcaption></figure>
+    <figure><img src="/static/anh/lop-1.jpg" alt="Học sinh đang làm bài trên máy tính"><figcaption>Mỗi em một máy, có điểm và gợi ý ngay sau khi nộp</figcaption></figure>
+  </div>
+  <div class="gt-trich">
+    <p>"Sản phẩm có ý nghĩa thiết thực trong việc hỗ trợ dạy và học môn Tin học ở cấp tiểu học, tạo điều kiện để học sinh chủ động tìm hiểu kiến thức, góp phần đổi mới hình thức tổ chức dạy học." <b>— Thầy Bùi Thanh Liêm, Tổ trưởng Tổ bộ môn</b></p>
+    <p>"Thầy ơi! Em muốn học được làm nhiều bài trên này ạ, mẹ em khen em làm tốt ạ." <b>— Mẫn Nghi, lớp 4.4</b></p>
+    <p>"Em thích phần gợi ý cho em." <b>— Cẩm Hằng, lớp 4.3</b></p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>6. Công nghệ và chi phí</h2>
+  <div class="buoc gt-4">
+    <div><div class="icon">🤖</div><b>Google Gemini Flash</b>Hiểu tiếng Việt tốt, gói miễn phí, tự chuyển model khi quá tải, có bộ câu hỏi mẫu khi mất kết nối AI.</div>
+    <div><div class="icon">⚙️</div><b>FastAPI + SQLite</b>Web Python nhẹ, chạy được trên máy chủ nhỏ, dễ chuyển cho trường khác.</div>
+    <div><div class="icon">☁️</div><b>Railway</b>Hosting miễn phí, địa chỉ công khai, không cần cài đặt ở trường.</div>
+    <div><div class="icon">💰</div><b>0 đồng</b>Toàn bộ chạy trong hạn mức miễn phí. Trường khác chỉ cần một khóa Gemini miễn phí để chạy riêng.</div>
+  </div>
+</div>
+
+<div class="card gt-lienhe">
+  <div>
+    <h2 style="margin-bottom:4px">Liên hệ và dùng thử</h2>
+    <p>Web: <a href="/"><b>tro-ly-tin-hoc-ai-production.up.railway.app</b></a><br>Giáo viên Trịnh Văn Điệu · Email: trinhvandieu209@gmail.com<br>Trường Liên cấp TH-THCS Nguyễn Quốc Phú · KP. Vĩnh Trường, Phường Tân Khánh, TP. Hồ Chí Minh</p>
+    <p class="nho">Sản phẩm dự thi Giải thưởng Tiên phong Ứng dụng AI trong Giáo dục Việt Nam 2026, bảng A (tiểu học). Khu vực giáo viên có mã riêng, liên hệ tác giả để được cấp quyền dùng thử.</p>
+  </div>
+  <img src="/static/qr-gioi-thieu.png" alt="Mã QR mở trang này" class="gt-qr">
+</div>
+{% endblock %}

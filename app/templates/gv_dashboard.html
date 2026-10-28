@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Giáo viên - Trợ lý Tin học AI{% endblock %}
+{% block content %}
+<h1>Soạn đề và theo dõi lớp</h1>
+<p class="sub">Chọn bài trong sách, AI soạn đề trong một phút, thầy cô duyệt rồi phát mã cho học sinh.</p>
+{% if not has_ai %}<div class="flash warn">Chưa có khóa Gemini nên nút "Tạo đề" dùng bộ câu hỏi mẫu soạn sẵn. Đặt biến GEMINI_API_KEY để AI tự soạn đề từ sách.</div>{% endif %}
+
+<div class="grid">
+  <div class="card">
+    <h2>📘 Tạo đề từ sách giáo khoa</h2>
+    <p class="sub">AI đọc đúng các trang bài học trong sách Kết nối tri thức.</p>
+    <form method="post" action="/gv/tao-de/sgk" id="form-sgk">
+      <div class="hang">
+        <div><label for="grade-sgk">Khối lớp</label>
+          <select id="grade-sgk" name="grade" onchange="doiKhoi(this.value)">{% for g in grades %}<option value="{{ g }}">Lớp {{ g }}</option>{% endfor %}</select></div>
+        <div><label for="n-sgk">Số câu</label><input id="n-sgk" type="number" name="n" value="{{ default_n }}" min="{{ min_n }}" max="{{ max_n }}"></div>
+      </div>
+      <label for="title-sgk">Tên đề (tùy chọn)</label>
+      <input id="title-sgk" type="text" name="title" maxlength="120" placeholder="Để trống thì lấy tên bài học, ví dụ: Ôn tập giữa kỳ I lớp 4.2">
+      <label for="semester">Đề ôn tập cả học kỳ</label>
+      <select id="semester" name="semester"><option value="">Không, chọn từng bài bên dưới</option><option value="1">Ôn tập học kỳ I</option><option value="2">Ôn tập học kỳ II</option></select>
+      <label>Hoặc chọn bài học</label>
+      {% for g in grades %}
+      <div class="lesson-list" id="lessons-{{ g }}" {% if not loop.first %}style="display:none"{% endif %}>
+        {% for l in lessons[g] %}<label><input type="checkbox" name="lesson_ids" value="{{ l.id }}" data-grade="{{ g }}"><span>{{ l.title }} <span class="nho">tr. {{ l.book_pages[0] }}–{{ l.book_pages[1] }}</span></span></label>{% endfor %}
+      </div>
+      {% endfor %}
+      <br><button class="btn" type="submit">Tạo đề bằng AI</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>📎 Tạo đề từ tài liệu riêng</h2>
+    <p class="sub">Đề cương, bài giảng hoặc ảnh chụp sách. PDF, ảnh, Word, tối đa 20 MB.</p>
+    <form method="post" action="/gv/tai-lieu" enctype="multipart/form-data">
+      <label for="title">Tên tài liệu</label><input id="title" type="text" name="title" required maxlength="120" placeholder="Ví dụ: Ôn tập giữa kỳ lớp 4">
+      <div class="hang">
+        <div><label for="grade-up">Khối lớp</label><select id="grade-up" name="grade">{% for g in grades %}<option value="{{ g }}">Lớp {{ g }}</option>{% endfor %}</select></div>
+        <div><label for="file">Tệp</label><input id="file" type="file" name="file" required accept=".pdf,.png,.jpg,.jpeg,.docx,.txt"></div>
+      </div>
+      <br><button class="btn luc" type="submit">Tải tài liệu lên</button>
+    </form>
+    {% if materials %}
+    <h3>Tài liệu đã tải</h3>
+    <div class="cuon"><table><tr><th>Tên</th><th>Lớp</th><th></th></tr>
+    {% for m in materials %}
+      <tr><td>{{ m.title }}<br><span class="nho">{{ m.filename }}</span></td><td>{{ m.grade }}</td>
+      <td><form method="post" action="/gv/tao-de/tai-lieu/{{ m.id }}" class="hang"><input type="text" name="title" maxlength="120" placeholder="Tên đề (tùy chọn)" style="min-width:150px"><input type="number" name="n" value="{{ default_n }}" min="{{ min_n }}" max="{{ max_n }}" style="max-width:76px"><button class="btn nho" type="submit">Tạo đề</button></form></td></tr>
+    {% endfor %}
+    </table></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>🗂️ Đề đã tạo</h2>
+  {% if not quizzes %}<p class="sub">Chưa có đề nào. Tạo đề đầu tiên ở trên, chỉ mất khoảng một phút.</p>{% else %}
+  <div class="ds-de">
+    {% for q in quizzes %}
+    <div class="de-item">
+      <div class="de-ten"><a href="/gv/de/{{ q.id }}"><b>{{ q.title }}</b></a>
+        <div class="nho">Lớp {{ q.grade }} · {{ q.question_count }} câu · {{ q.attempt_count }} lượt làm · {{ 'AI soạn' if q.source == 'ai' else 'bộ mẫu' }} · {{ q.created_at|gio }}</div></div>
+      <div class="de-ma"><span class="code">{{ q.code }}</span><span class="tag {{ q.status }}">{{ {'draft':'Nháp','published':'Đang mở','closed':'Đã đóng'}[q.status] }}</span></div>
+      <a class="btn nho xam" href="/gv/de/{{ q.id }}/word" title="Tải đề ra Word để in">📄 Word</a>
+      <a class="btn nho xam" href="/gv/de/{{ q.id }}">Mở</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+function doiKhoi(g){
+  document.querySelectorAll('[id^=lessons-]').forEach(function(el){ el.style.display = (el.id === 'lessons-' + g) ? '' : 'none'; });
+  document.querySelectorAll('#form-sgk input[type=checkbox]').forEach(function(c){ if(c.dataset.grade !== g) c.checked = false; });
+}
+</script>
+{% endblock %}

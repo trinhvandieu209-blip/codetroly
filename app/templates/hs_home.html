@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card hero">
+  <div>
+    <div class="ban-phim" aria-hidden="true"><span class="t">T</span><span>I</span><span class="n">N</span><span class="cach"></span><span class="b">H</span><span>Ọ</span><span class="s">C</span></div>
+    <h1>Ôn bài Tin học cùng siêu nhí trợ lý AI</h1>
+    <p class="sub">Làm bài thầy cô giao, biết điểm ngay, sai thì được gợi ý từng bước để tự tìm ra câu trả lời.</p>
+  </div>
+  <form method="post" action="/vao-bai">
+    <label for="code">Mã bài thầy cô gửi</label>
+    <input id="code" class="ma" type="text" name="code" placeholder="AB3K7P" maxlength="8" autocomplete="off" required>
+    <label for="name">Tên và lớp của em</label>
+    <input id="name" type="text" name="name" placeholder="Tên và lớp, ví dụ: Minh 4.3" maxlength="40" required>
+    <p class="nho">Chỉ cần tên gọi. Không cần tài khoản, không cần thông tin cá nhân.</p>
+    <button class="btn vang" type="submit" style="width:100%;font-size:1.1rem">Bắt đầu làm bài</button>
+    <p class="nho" style="text-align:center;margin-top:10px">Lần đầu vào? Đọc <a href="/huong-dan"><b>hướng dẫn và 6 quy tắc dùng AI an toàn</b></a> trước nhé.</p>
+  </form>
+</div>
+<div class="buoc">
+  <div><div class="icon">📘</div><b>Bài bám đúng sách</b>Câu hỏi soạn từ chính trang sách Kết nối tri thức em đang học.</div>
+  <div><div class="icon">💡</div><b>Sai thì có gợi ý</b>Trợ lý AI gợi ý tối đa 3 lần, dẫn dắt chứ không nói đáp án.</div>
+  <div><div class="icon">📅</div><b>Kế hoạch ôn riêng</b>Sau mỗi bài, em nhận kế hoạch 3 ngày cho đúng phần mình còn yếu.</div>
+</div>
+{% endblock %}

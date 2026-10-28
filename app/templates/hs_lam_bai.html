@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }} - Làm bài{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>{{ quiz.title }}</h1>
+  <p class="sub">Em <b>{{ student.name }}</b> · Tin học lớp {{ quiz.grade }} · {{ quiz.questions|length }} câu. Đọc kỹ rồi chọn, không vội nhé.</p>
+  <div class="tien-trinh"><i id="thanh" style="width:0%"></i></div>
+  <p class="nho"><span id="dem">0</span>/{{ quiz.questions|length }} câu đã trả lời</p>
+  <p><a class="btn vang nho" href="/game/{{ quiz.code }}">🎮 Hoặc ôn tập qua game</a> <span class="nho">từng câu một, có đồng hồ và bảng xếp hạng</span></p>
+</div>
+<form method="post" action="/lam-bai/{{ quiz.code }}" id="bai">
+{% for q in quiz.questions %}
+  <div class="cau">
+    <div class="de"><span class="so">{{ loop.index }}</span><span>{{ q.prompt }}</span></div>
+    {% if q.image_path %}<img class="anh-cau" src="/anh/{{ q.image_path }}" alt="Hình minh họa câu {{ loop.index }}">{% endif %}
+    {% if q.qtype == 'match' %}
+      <p class="nho">Chạm một ô bên trái, rồi chạm ô bên phải để nối. Chạm lại ô bên trái để bỏ nối.</p>
+      <div class="noi" data-q="{{ q.id }}">
+        <div class="cot">{% for p in q.options %}<button type="button" class="o trai" data-i="{{ loop.index0 }}" data-t="{{ p[0] }}">{{ p[0] }}</button>{% endfor %}</div>
+        <div class="cot">{% for tok, text in match_views[q.id] %}<button type="button" class="o phai" data-j="{{ tok }}" data-t="{{ text }}">{{ text }}</button>{% endfor %}</div>
+        <input type="hidden" name="q_{{ q.id }}" value="" required>
+      </div>
+    {% elif q.qtype == 'mcq' %}
+      <div class="luachon">
+      {% for opt in q.options %}
+        <label><input type="radio" name="q_{{ q.id }}" value="{{ opt[0] }}" required><span class="chu">{{ opt[0] }}</span><span>{{ opt[3:] if opt[1:3] == '. ' else opt }}</span></label>
+      {% endfor %}
+      </div>
+    {% else %}
+      {% if q.options %}<div class="tu-goi-y"><span class="nho">Chọn từ gợi ý hoặc tự gõ:</span>{% for w in q.options %}<button type="button" class="chip" data-for="q_{{ q.id }}">{{ w }}</button>{% endfor %}</div>{% endif %}
+      <input type="text" name="q_{{ q.id }}" maxlength="200" placeholder="Em gõ câu trả lời ngắn vào đây" required>
+    {% endif %}
+  </div>
+{% endfor %}
+  <div class="card" style="text-align:center">
+    <button class="btn luc" type="submit" style="font-size:1.15rem;padding:14px 32px">Nộp bài</button>
+    <p class="nho">Nộp xong em thấy điểm và nhận xét ngay.</p>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){
+  var form=document.getElementById('bai'), total={{ quiz.questions|length }};
+  function dem(){
+    var names={}; form.querySelectorAll('input').forEach(function(i){ if(i.type==='radio'?i.checked:i.value.trim()) names[i.name]=1; });
+    var n=Object.keys(names).length; document.getElementById('dem').textContent=n; document.getElementById('thanh').style.width=(100*n/total)+'%';
+  }
+  form.addEventListener('change',dem); form.addEventListener('input',dem);
+  form.addEventListener('submit', function(e){ var b=form.querySelector('button[type=submit]'); if(b.disabled){ e.preventDefault(); return; } b.disabled=true; b.textContent='Đang chấm bài, em chờ chút nhé...'; });
+  // nối ghép: chạm trái rồi chạm phải
+  form.querySelectorAll('.noi').forEach(function(box){
+    var trai=null, map={};
+    var hidden=box.querySelector('input[type=hidden]');
+    function ve(){ box.querySelectorAll('.o').forEach(function(b){ b.classList.remove('chon','da'); b.textContent=b.dataset.t; });
+      Object.keys(map).forEach(function(i,idx){ var a=box.querySelector('.trai[data-i="'+i+'"]'), b=box.querySelector('.phai[data-j="'+map[i]+'"]'); if(a&&b){ a.classList.add('da'); b.classList.add('da'); a.textContent=(idx+1)+'. '+a.dataset.t; b.textContent=(idx+1)+'. '+b.dataset.t; } });
+      if(trai!==null){ var t=box.querySelector('.trai[data-i="'+trai+'"]'); if(t) t.classList.add('chon'); }
+      hidden.value=Object.keys(map).map(function(i){ return i+':'+map[i]; }).join(','); dem(); }
+    box.querySelectorAll('.trai').forEach(function(b){ b.addEventListener('click', function(){ var i=b.dataset.i; if(map[i]!==undefined){ delete map[i]; trai=null; } else { trai=i; } ve(); }); });
+    box.querySelectorAll('.phai').forEach(function(b){ b.addEventListener('click', function(){ if(trai===null) return; var j=b.dataset.j; Object.keys(map).forEach(function(k){ if(map[k]==j) delete map[k]; }); map[trai]=j; trai=null; ve(); }); });
+  });
+  form.querySelectorAll('.chip').forEach(function(b){ b.addEventListener('click', function(){ var inp=form.querySelector('input[name="'+b.dataset.for+'"]'); inp.value=b.textContent.trim(); inp.focus(); dem(); }); });
+})();
+</script>
+{% endblock %}

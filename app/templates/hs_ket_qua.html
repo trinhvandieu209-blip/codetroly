@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Kết quả - {{ attempt.quiz.title }}{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="ketqua">
+    <div class="diem {{ 'thap' if attempt.score < attempt.total * 0.7 else '' }}">{{ attempt.score|int }}/{{ attempt.total }}</div>
+    <div>
+      <h1>{% if attempt.score == attempt.total %}Tuyệt vời, {{ attempt.student_name }}!{% elif attempt.score >= attempt.total * 0.7 %}Làm tốt lắm, {{ attempt.student_name }}!{% else %}Cố lên {{ attempt.student_name }}, ôn thêm chút nữa nhé{% endif %}</h1>
+      <p class="sub">{{ attempt.quiz.title }} · {{ attempt.created_at|gio }}</p>
+    </div>
+  </div>
+</div>
+
+{% for a in attempt.answers %}
+  <div class="cau {{ 'dung' if a.is_correct else 'sai' }}" id="cau-{{ a.question_id }}">
+    <div class="de"><span class="so">{{ a.position }}</span><span>{{ a.prompt }}</span></div>
+    {% if a.image_path %}<img class="anh-cau" src="/anh/{{ a.image_path }}" alt="">{% endif %}
+    {% if a.qtype == 'match' %}
+      <p class="lua-chon-text">Em nối: {% set chon = a.given|parse_match %}{% for p in a.options %}{{ p[0] }} → {{ a.options[chon[loop.index0]][1] if chon.get(loop.index0) is not none and chon[loop.index0] < a.options|length else '(chưa nối)' }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    {% elif a.options %}<p class="lua-chon-text">{% if a.qtype != 'mcq' %}Từ gợi ý: {% endif %}{% for opt in a.options %}{{ opt }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %}</p>{% endif %}
+    {% if a.qtype != 'match' %}<p class="tra-loi">Em trả lời: <b>{{ a.given or '(bỏ trống)' }}</b> {% if a.is_correct %}✅{% else %}❌{% endif %}</p>{% else %}<p class="tra-loi">{% if a.is_correct %}✅ Nối đúng hết{% else %}❌ Chưa đúng hết{% endif %}</p>{% endif %}
+    <p>{{ a.feedback }}</p>
+    {% if not a.is_correct %}
+      <div class="goi-y-khung" data-q="{{ a.question_id }}">
+        {% for h in a.hints %}<div class="goiy">💡 Gợi ý {{ h.level }}: {{ h.text }}</div>{% endfor %}
+        {% if not teacher_view %}
+        <button class="btn vang nho xin-goi-y" type="button" data-q="{{ a.question_id }}" {% if a.hints|length >= 3 %}disabled{% endif %}>
+          {% if a.hints|length >= 3 %}Đã hết gợi ý{% else %}💡 Xin gợi ý{% endif %}
+        </button>
+        {% endif %}
+      </div>
+      {% if teacher_view or a.hints|length >= 3 %}
+        <details style="margin-top:8px"><summary>Xem đáp án và giải thích</summary><p>Đáp án: <b>{% if a.qtype == 'match' %}{% for p in a.options %}{{ p[0] }} → {{ p[1] }}{% if not loop.last %}; {% endif %}{% endfor %}{% else %}{{ a.answer }}{% endif %}</b>. {{ a.explanation }}</p></details>
+      {% endif %}
+    {% else %}
+      <p class="nho">{{ a.explanation }}</p>
+    {% endif %}
+  </div>
+{% endfor %}
+
+<div class="card">
+  {% if attempt.game_points is not none %}<p>🎮 Điểm game: <b>{{ attempt.game_points }}</b> · <a href="/bxh/{{ attempt.quiz.code }}">Xem bảng xếp hạng</a></p>{% endif %}
+  <h2>📅 Kế hoạch ôn tập dành riêng cho em</h2>
+  <div class="kehoach">{{ attempt.plan_text }}</div>
+  <p class="nho">Nhớ nhé: AI gợi ý để em tự nghĩ, không làm thay em. Xem lại <a href="/huong-dan">6 quy tắc dùng AI an toàn</a>.</p>
+</div>
+<div class="card" id="phan-hoi">
+  <h2>💬 Em thấy bài hôm nay thế nào?</h2>
+  {% if feedback %}
+    <p>Em đã chia sẻ: <b>{{ {3:'Thích',2:'Bình thường',1:'Thấy khó'}[feedback.rating] }}</b>{% if feedback.comment %} · "{{ feedback.comment }}"{% endif %}</p>
+    {% if teacher_view %}<p class="nho">Nhận xét này hiện trong báo cáo lớp.</p>{% endif %}
+  {% elif teacher_view %}
+    <p class="sub">Học sinh chưa để lại nhận xét.</p>
+  {% else %}
+  <form method="post" action="/phan-hoi/{{ attempt.id }}">
+    <div class="mat">
+      <label><input type="radio" name="rating" value="3" required><span>😀</span>Thích</label>
+      <label><input type="radio" name="rating" value="2"><span>🙂</span>Bình thường</label>
+      <label><input type="radio" name="rating" value="1"><span>😕</span>Thấy khó</label>
+    </div>
+    <label for="comment">Em muốn nói gì với thầy? (không bắt buộc)</label>
+    <input id="comment" type="text" name="comment" maxlength="200" placeholder="Ví dụ: Em thích phần gợi ý vì giúp em tự nghĩ ra">
+    <br><br><button class="btn luc" type="submit">Gửi cho thầy</button>
+  </form>
+  {% endif %}
+</div>
+<div class="card" style="text-align:center">
+  {% if teacher_view %}<a class="btn xam" href="/gv/de/{{ attempt.quiz_id }}">Về trang đề</a>{% else %}<a class="btn" href="/">Làm bài khác</a> &nbsp; <a class="btn xam" href="/thoat">Xong, thoát cho bạn khác làm</a>{% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.xin-goi-y').forEach(function(btn){
+  btn.addEventListener('click', async function(){
+    btn.disabled = true; btn.textContent = 'Trợ lý AI đang nghĩ...';
+    try{
+      const r = await fetch('/goi-y/{{ attempt.id }}/' + btn.dataset.q, {method:'POST'});
+      const j = await r.json();
+      const box = btn.closest('.goi-y-khung');
+      const n = box.querySelectorAll('.goiy').length + 1;
+      const d = document.createElement('div'); d.className='goiy'; d.textContent = '💡 Gợi ý ' + n + ': ' + (j.hint || j.error);
+      box.insertBefore(d, btn);
+      if(n >= 3){ btn.textContent='Đã hết gợi ý'; if(j.answer && !box.querySelector('.dap-an')){ const da=document.createElement('div'); da.className='kehoach dap-an'; da.textContent='Đáp án: ' + j.answer + '. ' + (j.explanation||''); box.appendChild(da); } } else { btn.disabled=false; btn.textContent='💡 Xin gợi ý thêm'; }
+    }catch(e){ btn.disabled=false; btn.textContent='💡 Xin gợi ý'; }
+  });
+});
+</script>
+{% endblock %}

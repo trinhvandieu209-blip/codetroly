@@ -1,0 +1,15 @@
+app/.venv
+app/tests
+app/data/uploads
+app/data/*.db
+app/uploads
+_workspace
+ho-so
+mau
+tailieu/vo-bai-tap*
+tailieu/*.png
+tailieu/*.txt
+tailieu/*.docx
+.claude
+**/__pycache__
+tailieu/*.pdf

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Game - {{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="card game-top">
+  <div><b>{{ student.name }}</b><br><span class="nho">{{ quiz.title }}</span></div>
+  <div class="game-diem"><span id="diem">0</span><small>điểm</small></div>
+  <div class="game-chuoi">🔥 <span id="chuoi">0</span></div>
+  <span class="hang-loa"><button type="button" class="btn xam nho" id="loa" aria-pressed="true" title="Bật/tắt tiếng đúng sai">🔊 Âm thanh</button> <button type="button" class="btn xam nho" id="nhac" aria-pressed="true" title="Bật/tắt nhạc nền">🎵 Nhạc nền</button></span>
+</div>
+<div class="card" id="man">
+  <div class="tien-trinh"><i id="dong-ho" style="width:100%"></i></div>
+  <p class="nho"><span id="stt">1</span>/{{ quiz.questions|length }} · còn <span id="giay">{{ seconds }}</span> giây</p>
+  <div id="cau-hoi"></div>
+  <div id="phan-hoi" class="game-phan-hoi" hidden></div>
+  <p style="text-align:right;margin-top:10px"><button class="btn" id="tiep" hidden>Câu tiếp →</button></p>
+</div>
+<form method="post" action="/game/{{ quiz.code }}/ket-thuc" id="ket-thuc" hidden><button class="btn luc" type="submit" style="font-size:1.15rem">Xem kết quả và bảng xếp hạng 🏆</button></form>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){
+  var Q={{ questions|tojson }}, SEC={{ seconds }}, code={{ quiz.code|tojson }};
+  var i=0, t0=0, timer=null, locked=false;
+  var $=function(id){ return document.getElementById(id); };
+  // Âm thanh tổng hợp bằng Web Audio, không cần file. Tắt được bằng nút loa, nhớ lựa chọn trên máy này.
+  var AC=window.AudioContext||window.webkitAudioContext, ctx=null, loaBat=true;
+  try{ loaBat=localStorage.getItem('game_loa')!=='0'; }catch(e){}
+  function veLoa(){ var b=$('loa'); b.textContent=loaBat?'🔊 Âm thanh':'🔇 Đã tắt'; b.setAttribute('aria-pressed', loaBat?'true':'false'); }
+  function moCtx(){ if(!AC) return null; if(!ctx){ try{ ctx=new AC(); }catch(e){ return null; } } if(ctx.state==='suspended'){ ctx.resume(); } return ctx; }
+  function not(freq, t0, dur, kieu, vol){ var c=moCtx(); if(!c||!loaBat) return; var o=c.createOscillator(), g=c.createGain(); o.type=kieu||'sine'; o.frequency.setValueAtTime(freq, c.currentTime+t0); g.gain.setValueAtTime(0.0001, c.currentTime+t0); g.gain.exponentialRampToValueAtTime(vol||0.18, c.currentTime+t0+0.01); g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime+t0+dur); o.connect(g); g.connect(c.destination); o.start(c.currentTime+t0); o.stop(c.currentTime+t0+dur+0.02); }
+  var am={
+    dung: function(){ not(523,0,0.12,'triangle'); not(659,0.1,0.12,'triangle'); not(784,0.2,0.22,'triangle',0.22); },
+    sai: function(){ not(220,0,0.18,'sawtooth',0.12); not(165,0.16,0.3,'sawtooth',0.12); },
+    hetGio: function(){ not(440,0,0.1,'square',0.1); not(440,0.15,0.1,'square',0.1); not(330,0.3,0.35,'square',0.1); },
+    tick: function(){ not(1200,0,0.04,'square',0.06); },
+    chuoi: function(){ [659,784,988,1319].forEach(function(f,k){ not(f,k*0.07,0.1,'triangle',0.2); }); },
+    batDau: function(){ not(660,0,0.08,'sine',0.1); not(880,0.1,0.12,'sine',0.12); },
+    ketThuc: function(){ [523,659,784,1047].forEach(function(f,k){ not(f,k*0.12,0.25,'triangle',0.2); }); }
+  };
+  // Nhạc nền 8-bit: vòng lặp 16 nhịp, giai điệu + bass, âm lượng nhỏ, chạy bằng lịch trước 0,3 giây.
+  var nhacBat=true; try{ nhacBat=localStorage.getItem('game_nhac')!=='0'; }catch(e){}
+  var GIAI=[523,659,784,659, 587,698,880,698, 523,659,784,1047, 988,784,659,587];
+  var BASS=[262,0,330,0, 294,0,349,0, 262,0,330,0, 392,0,294,0];
+  var NHIP=0.22, nhac={dang:false, nhipKe:0, tKe:0, timer:null};
+  function datNot(c, f, t, dur, kieu, vol){ if(!f) return; var o=c.createOscillator(), g=c.createGain(); o.type=kieu; o.frequency.value=f; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.02); }
+  function lapNhac(){ var c=ctx; if(!c||!nhac.dang) return; while(nhac.tKe<c.currentTime+0.3){ var k=nhac.nhipKe%16; datNot(c,GIAI[k],nhac.tKe,NHIP*0.9,'triangle',0.035); datNot(c,BASS[k],nhac.tKe,NHIP*1.6,'sine',0.05); if(k%4===0) datNot(c,80,nhac.tKe,0.08,'square',0.02); nhac.nhipKe++; nhac.tKe+=NHIP; } }
+  function batNhac(){ if(!nhacBat||!loaBat||nhac.dang) return; var c=moCtx(); if(!c) return; nhac.dang=true; nhac.nhipKe=0; nhac.tKe=c.currentTime+0.05; lapNhac(); nhac.timer=setInterval(lapNhac,100); }
+  function tatNhac(){ nhac.dang=false; clearInterval(nhac.timer); }
+  function veNhac(){ var b=$('nhac'); b.textContent=nhacBat?'🎵 Nhạc nền':'🎵 Tắt nhạc'; b.setAttribute('aria-pressed', nhacBat?'true':'false'); }
+  $('nhac').addEventListener('click', function(){ nhacBat=!nhacBat; try{ localStorage.setItem('game_nhac', nhacBat?'1':'0'); }catch(e){} veNhac(); if(nhacBat) batNhac(); else tatNhac(); });
+  veNhac();
+  document.addEventListener('pointerdown', function(){ moCtx(); batNhac(); }, {once:true});
+  $('loa').addEventListener('click', function(){ loaBat=!loaBat; try{ localStorage.setItem('game_loa', loaBat?'1':'0'); }catch(e){} veLoa(); if(loaBat){ am.batDau(); batNhac(); } else { tatNhac(); } });
+  veLoa();
+  var giayTruoc=-1;
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function shuffle(a){ a=a.slice(); for(var k=a.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=a[k]; a[k]=a[j]; a[j]=t; } return a; }
+  function render(){
+    var q=Q[i]; locked=false; $('stt').textContent=i+1; $('phan-hoi').hidden=true; $('tiep').hidden=true;
+    var h='<div class="de"><span class="so">'+(i+1)+'</span><span>'+esc(q.prompt)+'</span></div>';
+    if(q.image) h+='<img class="anh-cau" src="/anh/'+esc(q.image)+'" alt="">';
+    if(q.qtype==='mcq'){ h+='<div class="luachon">'+q.options.map(function(o){ return '<button type="button" class="o-game" data-v="'+esc(o[0])+'"><span class="chu">'+esc(o[0])+'</span><span>'+esc(o.slice(3))+'</span></button>'; }).join('')+'</div>'; }
+    else if(q.qtype==='match'){ h+='<div class="noi"><div class="cot">'+q.left.map(function(l,k){ return '<button type="button" class="o trai" data-i="'+k+'" data-t="'+esc(l)+'">'+esc(l)+'</button>'; }).join('')+'</div><div class="cot">'+q.right.map(function(r){ return '<button type="button" class="o phai" data-j="'+esc(r[0])+'" data-t="'+esc(r[1])+'">'+esc(r[1])+'</button>'; }).join('')+'</div></div><p class="nho">Chạm ô bên trái rồi chạm ô bên phải để nối. Nối đủ các cặp rồi bấm Nối xong.</p><p style="text-align:right"><button type="button" class="btn luc nho" id="nop-noi" disabled>Nối xong</button></p>'; }
+    else { h+='<div class="tu-goi-y">'+(q.bank||[]).map(function(w){ return '<button type="button" class="chip">'+esc(w)+'</button>'; }).join('')+'</div><div class="hang"><input type="text" id="o-ngan" maxlength="200" placeholder="Gõ câu trả lời"><button type="button" class="btn luc" id="nop-ngan" style="flex:0 0 auto">Trả lời</button></div>'; }
+    $('cau-hoi').innerHTML=h;
+    $('cau-hoi').querySelectorAll('.o-game').forEach(function(b){ b.addEventListener('click', function(){ answer(b.dataset.v, b); }); });
+    $('cau-hoi').querySelectorAll('.chip').forEach(function(b){ b.addEventListener('click', function(){ $('o-ngan').value=b.textContent; }); });
+    var ng=$('nop-ngan'); if(ng){ ng.addEventListener('click', function(){ answer($('o-ngan').value); }); $('o-ngan').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); answer($('o-ngan').value); } }); $('o-ngan').focus(); }
+    var map={}, trai=null, box=$('cau-hoi').querySelector('.noi');
+    if(box){ function ve(){ box.querySelectorAll('.o').forEach(function(b){ b.classList.remove('chon','da'); b.textContent=b.dataset.t; }); Object.keys(map).forEach(function(k,idx){ var a=box.querySelector('.trai[data-i="'+k+'"]'), b=box.querySelector('.phai[data-j="'+map[k]+'"]'); a.classList.add('da'); b.classList.add('da'); a.textContent=(idx+1)+'. '+a.dataset.t; b.textContent=(idx+1)+'. '+b.dataset.t; }); if(trai!==null) box.querySelector('.trai[data-i="'+trai+'"]').classList.add('chon'); $('nop-noi').disabled=Object.keys(map).length<q.left.length; }
+      box.querySelectorAll('.trai').forEach(function(b){ b.addEventListener('click', function(){ var k=b.dataset.i; if(map[k]!==undefined){ delete map[k]; trai=null; } else trai=k; ve(); }); });
+      box.querySelectorAll('.phai').forEach(function(b){ b.addEventListener('click', function(){ if(trai===null) return; var j=b.dataset.j; Object.keys(map).forEach(function(k){ if(map[k]==j) delete map[k]; }); map[trai]=j; trai=null; ve(); }); });
+      $('nop-noi').addEventListener('click', function(){ answer(Object.keys(map).map(function(k){ return k+':'+map[k]; }).join(',')); }); }
+    t0=Date.now(); clearInterval(timer); timer=setInterval(tick,200); tick();
+    fetch('/game/'+code+'/bat-dau/'+q.id,{method:'POST'}).catch(function(){});
+  }
+  function tick(){ var left=Math.max(0, SEC-(Date.now()-t0)/1000); var g=Math.ceil(left); if(g!==giayTruoc){ giayTruoc=g; if(g<=5&&g>0&&!locked) am.tick(); } $('giay').textContent=g; $('dong-ho').style.width=(100*left/SEC)+'%'; $('dong-ho').style.background=left<5?'var(--san-ho)':'var(--bac-ha)'; if(left<=0){ answer(''); } }
+  async function answer(v, btn){
+    if(locked) return; locked=true; clearInterval(timer);
+    var elapsed=(Date.now()-t0)/1000;
+    try{
+      var r=await fetch('/game/'+code+'/tra-loi',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question_id:Q[i].id, given:v, elapsed:elapsed})});
+      var j=await r.json();
+      $('diem').textContent=j.total; $('chuoi').textContent=j.streak;
+      if(j.correct){ if(j.streak>=3) am.chuoi(); else am.dung(); } else if(!String(v||'').trim()){ am.hetGio(); } else { am.sai(); }
+      var ph=$('phan-hoi'); ph.hidden=false; ph.className='game-phan-hoi '+(j.correct?'dung':'sai');
+      var boTrong=!String(v||'').trim();
+      var loi=j.correct?'🎉 Đúng rồi! +'+j.points+' điểm':(boTrong?'⏰ Tiếc quá! Em không chọn đáp án. Đáp án: <b>'+esc(j.answer)+'</b>':'😅 Chưa đúng. Đáp án: <b>'+esc(j.answer)+'</b>');
+      ph.innerHTML=loi+(j.explanation?'<br><span class="nho">'+esc(j.explanation)+'</span>':'');
+      if(btn){ btn.classList.add(j.correct?'dung':'sai'); }
+    }catch(e){ $('phan-hoi').hidden=false; $('phan-hoi').textContent='Mất kết nối, bấm Câu tiếp để tiếp tục.'; }
+    if(i+1<Q.length){ $('tiep').hidden=false; } else { $('tiep').hidden=true; $('ket-thuc').hidden=false; $('ket-thuc').scrollIntoView({behavior:'smooth'}); tatNhac(); am.ketThuc(); }
+  }
+  $('tiep').addEventListener('click', function(){ i++; render(); am.batDau(); window.scrollTo({top:0,behavior:'smooth'}); });
+  render();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Bảng xếp hạng - {{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>🏆 Bảng xếp hạng game</h1>
+  <p class="sub">{{ quiz.title }} · {{ rows|length }} bạn đã chơi · mỗi bạn tính lượt điểm cao nhất, bằng điểm thì ai nhanh hơn xếp trên</p>
+  {% if not rows %}<p class="sub">Chưa có ai chơi. Hãy là người đầu tiên!</p>{% else %}
+  <div class="cuon"><table><tr><th>Hạng</th><th>Bạn</th><th>Lớp</th><th>Điểm game</th><th>Đúng</th><th>Thời gian</th></tr>
+  {% for r in rows %}<tr{% if me and r.student_name|lower == me|lower %} class="toi"{% endif %}><td>{% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}</td><td><b>{{ r.ten }}</b>{% if me and r.student_name|lower == me|lower %} <span class="nho">(em)</span>{% endif %}</td><td>{{ r.lop }}</td><td><b>{{ r.points }}</b></td><td>{{ r.score|int }}/{{ r.total }}</td><td>{{ (r.seconds or 0) // 60 }}:{{ '%02d' % ((r.seconds or 0) % 60) }}</td></tr>{% endfor %}
+  </table></div>
+  {% endif %}
+  <p style="margin-top:14px">
+    {% if teacher_view %}<a class="btn xam" href="/gv/de/{{ quiz.id }}">Về trang đề</a>
+    {% else %}{% if ket_qua %}<a class="btn" href="/ket-qua/{{ ket_qua }}">Xem bài làm và kế hoạch ôn tập</a> {% endif %}<a class="btn vang" href="/game/{{ quiz.code }}">Chơi lại</a> <a class="btn xam" href="/">Trang chủ</a>{% endif %}
+  </p>
+</div>
+{% endblock %}

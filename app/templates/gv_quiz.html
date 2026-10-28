@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }} - Giáo viên{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>{{ quiz.title }}</h1>
+  <details class="doi-ten"><summary class="nho">✏️ Đổi tên đề</summary>
+    <form method="post" action="/gv/de/{{ quiz.id }}/tieu-de" class="hang" style="margin-top:6px">
+      <input type="text" name="title" value="{{ quiz.title }}" maxlength="120" required style="flex:1;min-width:220px"><button class="btn nho" type="submit" style="flex:0 0 auto">Lưu tên</button>
+    </form>
+  </details>
+  <p class="sub">Lớp {{ quiz.grade }} · {{ quiz.questions|length }} câu · {{ 'AI soạn từ tài liệu' if quiz.source == 'ai' else 'bộ câu hỏi mẫu' }} · <span class="tag {{ quiz.status }}">{{ {'draft':'Nháp','published':'Đang mở','closed':'Đã đóng'}[quiz.status] }}</span></p>
+  <div class="hop-ma">
+    <span>Mã bài cho học sinh</span>
+    <span class="code">{{ quiz.code }}</span>
+    <span class="code-phim" aria-hidden="true">{% for ch in quiz.code %}<span>{{ ch }}</span>{% endfor %}</span>
+    <form method="post" action="/gv/de/{{ quiz.id }}/trang-thai" style="display:flex;gap:8px;flex-wrap:wrap;margin-left:auto">
+      {% if quiz.status != 'published' %}<button class="btn luc" name="status" value="published">Phát hành cho học sinh</button>{% endif %}
+      {% if quiz.status == 'published' %}<button class="btn xam" name="status" value="closed">Đóng bài</button>{% endif %}
+      {% if quiz.status != 'draft' %}<button class="btn xam" name="status" value="draft">Về nháp</button>{% endif %}
+      <a class="btn xam" href="/gv/bxh/{{ quiz.id }}">🎮 Bảng xếp hạng game</a>
+      <a class="btn xam" href="/gv/de/{{ quiz.id }}/word">📄 Tải Word để in</a>
+      <a class="btn xam" href="/gv/de/{{ quiz.id }}/word?dap_an=1">📄 Word kèm đáp án</a>
+    <a class="btn xam" href="/gv">Danh sách đề</a>
+    </form>
+  </div>
+  <p class="nho">Học sinh vào trang chủ, nhập mã bài và tên gọi là làm được. Thầy cô duyệt câu hỏi ở cuối trang trước khi phát hành.</p>
+</div>
+
+<div class="card">
+  <h2>📊 Kết quả lớp</h2>
+  <div class="stat">
+    <div><b>{{ report.attempts|length }}</b>lượt làm</div>
+    <div><b>{{ report.average_pct }}%</b>điểm trung bình</div>
+    <div><b>{{ report.hint_count }}</b>lượt xin gợi ý</div>
+    <div><b>{{ report.weak_topics|length }}</b>mục cần ôn lại</div>
+  </div>
+  {% if report.weak_topics %}<p><b>Học sinh sai nhiều ở:</b> {% for t, n in report.weak_topics %}{{ t }} ({{ n }} lượt){% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+  {% if report.attempts %}
+  <div class="cuon"><table><tr><th>Học sinh</th><th>Điểm</th><th>Thời gian</th><th></th></tr>
+  {% for a in report.attempts %}<tr><td>{{ a.student_name }}{% if a.lan > 1 %} <span class="nho">(lần {{ a.lan }})</span>{% endif %}</td><td><b>{{ a.score|int }}/{{ a.total }}</b></td><td>{{ a.created_at|gio }}</td><td><a href="/gv/luot/{{ a.id }}">Xem bài</a> · <form method="post" action="/gv/luot/{{ a.id }}/xoa" style="display:inline" onsubmit="return confirm('Xóa lượt làm này?')"><button type="submit" style="background:none;border:none;color:var(--san-ho-dam);font-weight:700;cursor:pointer;font-family:inherit;padding:0">Xóa</button></form></td></tr>{% endfor %}
+  </table></div>
+  <p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn nho xam" href="/gv/de/{{ quiz.id }}/csv">Tải bảng điểm CSV</a>
+  <form method="post" action="/gv/de/{{ quiz.id }}/luot-trung" onsubmit="return confirm('Xóa các lượt trùng (cùng tên, cùng điểm, nộp lại trong 10 phút)? Lượt có nhận xét hoặc gợi ý được giữ lại.')"><button class="btn nho xam" type="submit">Xóa lượt trùng</button></form></p>
+  {% if report.feedback %}
+  <h3>Nhận xét của học sinh{% if report.liked_pct is not none %} · {{ report.liked_pct }}% thích{% endif %}</h3>
+  <div class="cuon"><table><tr><th>Học sinh</th><th>Cảm nhận</th><th>Nhận xét</th></tr>
+  {% for f in report.feedback %}<tr><td>{{ f.student_name }}</td><td>{{ f.label }}</td><td>{{ f.comment }}</td></tr>{% endfor %}
+  </table></div>
+  {% endif %}
+  <h3>Tỉ lệ sai theo câu</h3>
+  <div class="cuon"><table><tr><th>Câu</th><th>Nội dung</th><th>Mục</th><th>Sai / tổng</th></tr>
+  {% for w in report.per_question %}<tr><td>{{ w.position }}</td><td>{{ w.prompt }}</td><td>{{ w.topic }}</td><td>{{ w.wrong or 0 }} / {{ w.n }}</td></tr>{% endfor %}
+  </table></div>
+  {% else %}<p class="sub">Chưa có học sinh nào làm. Phát hành rồi gửi mã bài cho lớp.</p>{% endif %}
+</div>
+
+<form method="post" action="/gv/de/{{ quiz.id }}/luu" enctype="multipart/form-data">
+<div class="card">
+  <h2>✏️ Duyệt và chỉnh câu hỏi</h2>
+  <p class="sub">Sửa trực tiếp rồi bấm Lưu. Câu nào AI soạn chưa ổn, thầy cô chỉ cần gõ lại.</p>
+  {% for q in quiz.questions %}
+  <div class="cau">
+    <div class="de"><span class="so">{{ q.position }}</span><span><span class="tag draft">{{ {'mcq':'Trắc nghiệm','short':'Trả lời ngắn','match':'Nối ghép'}[q.qtype] }}</span> <span class="nho">{{ q.topic }}</span></span></div>
+    <label>Câu hỏi</label><textarea name="prompt_{{ q.id }}">{{ q.prompt }}</textarea>
+    <div class="hang">
+      <div><label>Hình minh họa (PNG/JPG, tối đa 3 MB){% if q.image_path %} · đang có ảnh{% endif %}</label><input type="file" name="img_{{ q.id }}" accept=".png,.jpg,.jpeg,.gif"></div>
+      {% if q.image_path %}<div style="flex:0 0 auto"><img src="/anh/{{ q.image_path }}" alt="" style="max-height:90px;border-radius:8px"><br><label style="font-weight:600"><input type="checkbox" name="xoa_anh_{{ q.id }}" value="1"> Xóa ảnh</label></div>{% endif %}
+    </div>
+    {% if q.qtype == 'match' %}
+      <label>Các cặp nối, mỗi dòng một cặp: vế trái = vế phải (2–5 cặp)</label>
+      <textarea name="pairs_{{ q.id }}" style="min-height:110px">{% for p in q.options %}{{ p[0] }} = {{ p[1] }}
+{% endfor %}</textarea>
+    {% elif q.qtype == 'mcq' %}
+      <label>Lựa chọn (để trống để xóa, tối đa 5)</label>
+      {% for i in range(5) %}<input type="text" name="opt_{{ q.id }}_{{ i }}" value="{{ q.options[i] if i < q.options|length else '' }}" placeholder="{{ 'Thêm lựa chọn' if i >= q.options|length else '' }}" style="margin:4px 0">{% endfor %}
+      <label>Đáp án đúng (chữ cái)</label><input type="text" name="answer_{{ q.id }}" value="{{ q.answer }}" maxlength="1" style="max-width:90px">
+    {% else %}
+      <label>Đáp án mẫu</label><input type="text" name="answer_{{ q.id }}" value="{{ q.answer }}">
+      <label>Từ gợi ý hiện cho học sinh (cách nhau bằng dấu phẩy, gồm đáp án và từ gây nhiễu)</label><input type="text" name="bank_{{ q.id }}" value="{{ q.options|join(', ') }}" placeholder="Ví dụ: dạng chữ, dạng hình ảnh, dạng âm thanh, dạng số">
+    {% endif %}
+    <label>Giải thích cho học sinh</label><textarea name="explanation_{{ q.id }}">{{ q.explanation }}</textarea>
+    <p style="text-align:right;margin:6px 0 0"><button class="btn do nho" type="submit" formaction="/gv/de/{{ quiz.id }}/cau/{{ q.id }}/xoa" formnovalidate onclick="return confirm('Xóa câu {{ q.position }}?')">Xóa câu này</button></p>
+  </div>
+  {% endfor %}
+  <button class="btn" type="submit">Lưu chỉnh sửa</button>
+</div>
+</form>
+<form method="post" action="/gv/de/{{ quiz.id }}/xoa" onsubmit="return confirm('Xóa đề này và toàn bộ kết quả?')" style="text-align:right">
+  <button class="btn do nho" type="submit">Xóa đề</button>
+</form>
+{% endblock %}

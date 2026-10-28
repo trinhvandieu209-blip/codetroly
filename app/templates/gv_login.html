@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:440px;margin:48px auto">
+  <h1>Khu vực giáo viên</h1>
+  <p class="sub">Nhập mã PIN để soạn đề và xem kết quả lớp.</p>
+  <form method="post" action="/gv/dang-nhap">
+    <label for="pin">Mã PIN</label>
+    <input id="pin" class="ma" type="password" name="pin" required autofocus>
+    <br><br><button class="btn" type="submit" style="width:100%">Vào khu vực giáo viên</button>
+  </form>
+</div>
+{% endblock %}

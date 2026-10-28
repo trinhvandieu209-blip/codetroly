@@ -1,0 +1,683 @@
+{
+ "3": {
+  "file": "sgk-tin-hoc-3.pdf",
+  "book": "Tin học 3 - Kết nối tri thức với cuộc sống",
+  "lessons": [
+   {
+    "id": "b1",
+    "title": "Bài 1. Thông tin và quyết định",
+    "book_pages": [
+     5,
+     8
+    ],
+    "pages": [
+     6,
+     9
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b2",
+    "title": "Bài 2. Xử lí thông tin",
+    "book_pages": [
+     9,
+     12
+    ],
+    "pages": [
+     10,
+     13
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b3",
+    "title": "Bài 3. Máy tính và em",
+    "book_pages": [
+     13,
+     17
+    ],
+    "pages": [
+     14,
+     18
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b4",
+    "title": "Bài 4. Làm việc với máy tính",
+    "book_pages": [
+     18,
+     24
+    ],
+    "pages": [
+     19,
+     25
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b5",
+    "title": "Bài 5. Sử dụng bàn phím",
+    "book_pages": [
+     25,
+     29
+    ],
+    "pages": [
+     26,
+     30
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b6",
+    "title": "Bài 6. Khám phá thông tin trên Internet",
+    "book_pages": [
+     30,
+     33
+    ],
+    "pages": [
+     31,
+     34
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b7",
+    "title": "Bài 7. Sắp xếp để dễ tìm",
+    "book_pages": [
+     34,
+     37
+    ],
+    "pages": [
+     35,
+     38
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b8",
+    "title": "Bài 8. Sơ đồ hình cây. Tổ chức thông tin trong máy tính",
+    "book_pages": [
+     38,
+     41
+    ],
+    "pages": [
+     39,
+     42
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b9",
+    "title": "Bài 9. Thực hành với tệp và thư mục trong máy tính",
+    "book_pages": [
+     42,
+     45
+    ],
+    "pages": [
+     43,
+     46
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b10",
+    "title": "Bài 10. Bảo vệ thông tin khi dùng máy tính",
+    "book_pages": [
+     46,
+     49
+    ],
+    "pages": [
+     47,
+     50
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b11",
+    "title": "Bài 11. Bài trình chiếu của em",
+    "book_pages": [
+     50,
+     54
+    ],
+    "pages": [
+     51,
+     55
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b12",
+    "title": "Bài 12. Tìm hiểu về thế giới tự nhiên",
+    "book_pages": [
+     55,
+     58
+    ],
+    "pages": [
+     56,
+     59
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b13",
+    "title": "Bài 13. Luyện tập sử dụng chuột",
+    "book_pages": [
+     59,
+     62
+    ],
+    "pages": [
+     60,
+     63
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b14",
+    "title": "Bài 14. Em thực hiện công việc như thế nào?",
+    "book_pages": [
+     63,
+     66
+    ],
+    "pages": [
+     64,
+     67
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b15",
+    "title": "Bài 15. Công việc được thực hiện theo điều kiện",
+    "book_pages": [
+     67,
+     70
+    ],
+    "pages": [
+     68,
+     71
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b16",
+    "title": "Bài 16. Công việc của em và sự trợ giúp của máy tính",
+    "book_pages": [
+     71,
+     74
+    ],
+    "pages": [
+     72,
+     75
+    ],
+    "semester": 2
+   }
+  ]
+ },
+ "4": {
+  "file": "sgk-tin-hoc-4.pdf",
+  "book": "Tin học 4 - Kết nối tri thức với cuộc sống",
+  "lessons": [
+   {
+    "id": "b1",
+    "title": "Bài 1. Phần cứng và phần mềm máy tính",
+    "book_pages": [
+     5,
+     9
+    ],
+    "pages": [
+     7,
+     11
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b2",
+    "title": "Bài 2. Gõ bàn phím đúng cách",
+    "book_pages": [
+     10,
+     13
+    ],
+    "pages": [
+     12,
+     15
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b3",
+    "title": "Bài 3. Thông tin trên trang web",
+    "book_pages": [
+     14,
+     17
+    ],
+    "pages": [
+     16,
+     19
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b4",
+    "title": "Bài 4. Tìm kiếm thông tin trên Internet",
+    "book_pages": [
+     18,
+     21
+    ],
+    "pages": [
+     20,
+     23
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b5",
+    "title": "Bài 5. Thao tác với tệp và thư mục",
+    "book_pages": [
+     22,
+     26
+    ],
+    "pages": [
+     24,
+     28
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b6",
+    "title": "Bài 6. Sử dụng phần mềm khi được phép",
+    "book_pages": [
+     27,
+     29
+    ],
+    "pages": [
+     29,
+     31
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b7",
+    "title": "Bài 7. Tạo bài trình chiếu",
+    "book_pages": [
+     30,
+     33
+    ],
+    "pages": [
+     32,
+     35
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b8",
+    "title": "Bài 8. Định dạng văn bản trên trang chiếu",
+    "book_pages": [
+     34,
+     38
+    ],
+    "pages": [
+     36,
+     40
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b9",
+    "title": "Bài 9. Hiệu ứng chuyển trang",
+    "book_pages": [
+     39,
+     42
+    ],
+    "pages": [
+     41,
+     44
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b10",
+    "title": "Bài 10. Phần mềm soạn thảo văn bản",
+    "book_pages": [
+     43,
+     46
+    ],
+    "pages": [
+     45,
+     48
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b11",
+    "title": "Bài 11. Chỉnh sửa văn bản",
+    "book_pages": [
+     47,
+     51
+    ],
+    "pages": [
+     49,
+     53
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b12a",
+    "title": "Bài 12A. Thực hành đa phương tiện",
+    "book_pages": [
+     52,
+     54
+    ],
+    "pages": [
+     54,
+     56
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b12b",
+    "title": "Bài 12B. Phần mềm luyện tập gõ bàn phím",
+    "book_pages": [
+     55,
+     58
+    ],
+    "pages": [
+     57,
+     60
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b13",
+    "title": "Bài 13. Chơi với máy tính",
+    "book_pages": [
+     59,
+     62
+    ],
+    "pages": [
+     61,
+     64
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b14",
+    "title": "Bài 14. Khám phá môi trường lập trình trực quan",
+    "book_pages": [
+     63,
+     67
+    ],
+    "pages": [
+     65,
+     69
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b15",
+    "title": "Bài 15. Tạo chương trình máy tính để diễn tả ý tưởng",
+    "book_pages": [
+     68,
+     71
+    ],
+    "pages": [
+     70,
+     73
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b16",
+    "title": "Bài 16. Chương trình của em",
+    "book_pages": [
+     72,
+     74
+    ],
+    "pages": [
+     74,
+     76
+    ],
+    "semester": 2
+   }
+  ]
+ },
+ "5": {
+  "file": "sgk-tin-hoc-5.pdf",
+  "book": "Tin học 5 - Kết nối tri thức với cuộc sống",
+  "lessons": [
+   {
+    "id": "b1",
+    "title": "Bài 1. Em có thể làm gì với máy tính?",
+    "book_pages": [
+     5,
+     7
+    ],
+    "pages": [
+     5,
+     7
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b2",
+    "title": "Bài 2. Tìm kiếm thông tin trên website",
+    "book_pages": [
+     8,
+     13
+    ],
+    "pages": [
+     8,
+     13
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b3",
+    "title": "Bài 3. Tìm kiếm thông tin trong giải quyết vấn đề",
+    "book_pages": [
+     14,
+     18
+    ],
+    "pages": [
+     14,
+     18
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b4",
+    "title": "Bài 4. Cây thư mục",
+    "book_pages": [
+     19,
+     23
+    ],
+    "pages": [
+     19,
+     23
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b5",
+    "title": "Bài 5. Bản quyền nội dung thông tin",
+    "book_pages": [
+     24,
+     28
+    ],
+    "pages": [
+     24,
+     28
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b6",
+    "title": "Bài 6. Định dạng kí tự và bố trí hình ảnh trong văn bản",
+    "book_pages": [
+     29,
+     33
+    ],
+    "pages": [
+     29,
+     33
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b7",
+    "title": "Bài 7. Thực hành soạn thảo văn bản",
+    "book_pages": [
+     34,
+     36
+    ],
+    "pages": [
+     34,
+     36
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b8a",
+    "title": "Bài 8A. Làm quen với phần mềm đồ hoạ",
+    "book_pages": [
+     37,
+     42
+    ],
+    "pages": [
+     37,
+     42
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b9a",
+    "title": "Bài 9A. Sử dụng phần mềm đồ hoạ tạo sản phẩm số",
+    "book_pages": [
+     43,
+     45
+    ],
+    "pages": [
+     43,
+     45
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b8b",
+    "title": "Bài 8B. Làm sản phẩm thủ công theo video hướng dẫn",
+    "book_pages": [
+     46,
+     48
+    ],
+    "pages": [
+     46,
+     48
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b9b",
+    "title": "Bài 9B. Thực hành tạo đồ dùng gia đình theo video hướng dẫn",
+    "book_pages": [
+     49,
+     51
+    ],
+    "pages": [
+     49,
+     51
+    ],
+    "semester": 1
+   },
+   {
+    "id": "b10",
+    "title": "Bài 10. Cấu trúc tuần tự",
+    "book_pages": [
+     52,
+     55
+    ],
+    "pages": [
+     52,
+     55
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b11",
+    "title": "Bài 11. Cấu trúc lặp",
+    "book_pages": [
+     56,
+     58
+    ],
+    "pages": [
+     56,
+     58
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b12",
+    "title": "Bài 12. Thực hành sử dụng lệnh lặp",
+    "book_pages": [
+     59,
+     61
+    ],
+    "pages": [
+     59,
+     61
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b13",
+    "title": "Bài 13. Cấu trúc rẽ nhánh",
+    "book_pages": [
+     62,
+     66
+    ],
+    "pages": [
+     62,
+     66
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b14",
+    "title": "Bài 14. Sử dụng biến trong chương trình",
+    "book_pages": [
+     67,
+     72
+    ],
+    "pages": [
+     67,
+     72
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b15",
+    "title": "Bài 15. Sử dụng biểu thức trong chương trình",
+    "book_pages": [
+     73,
+     77
+    ],
+    "pages": [
+     73,
+     77
+    ],
+    "semester": 2
+   },
+   {
+    "id": "b16",
+    "title": "Bài 16. Từ kịch bản đến chương trình",
+    "book_pages": [
+     78,
+     82
+    ],
+    "pages": [
+     78,
+     82
+    ],
+    "semester": 2
+   }
+  ]
+ }
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Trợ lý AI - Thầy Điệu{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="/"><span class="cap">⌨</span> Trợ lý AI - Thầy Điệu</a>
+  <nav>
+    <span class="ai {% if not has_ai %}mau{% endif %}">{% if has_ai %}AI đang bật{% else %}Chế độ câu hỏi mẫu{% endif %}</span>
+    <a href="/">Học sinh</a>
+    <a href="/huong-dan">Hướng dẫn</a>
+    <a href="/gv">Giáo viên</a>
+    {% if request.session.get('teacher') %}<a href="/gv/dang-xuat">Đăng xuất</a>{% endif %}
+  </nav>
+</header>
+<main>
+{% if flash %}<div class="flash {{ flash.kind }}">{{ flash.text }}</div>{% endif %}
+{% block content %}{% endblock %}
+</main>
+<footer>Trường Liên cấp TH-THCS Nguyễn Quốc Phú · Tin học lớp 3, 4, 5 · Sách Kết nối tri thức với cuộc sống</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>
